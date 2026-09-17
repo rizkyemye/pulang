@@ -98,7 +98,7 @@
     <div class="kartu">
       <h2>🗓️ Rencana perjalanan</h2>
       <div class="baris"><span>Berangkat dari Jepang</span><b id="tglBerangkat">5 Jan 2027</b></div>
-      <div class="baris"><span>Ketemu Pacar Saya 💕</span><b id="tglKetemu">6 Jan 2027</b></div>
+      <div class="baris"><span>Ketemu Andra 💕</span><b id="tglKetemu">6 Jan 2027</b></div>
       <div class="baris"><span>Hari lamaran 🎀</span><b id="tglLamaran">— belum diisi</b></div>
       <div class="baris"><span>Kembali ke Jepang</span><b id="tglKembali">17 Jan 2027</b></div>
       <div class="baris"><span>Sisa hari sebelum pulang ke Jepang</span><b id="sisaKembali">–</b></div>
@@ -117,7 +117,7 @@
   </div>
 
   <div class="kaki">
-    Dibuat sama Emye 🌸 · 目標: インドネシアに帰る日<br>
+    Dibuat sama Tzuyu 🌸 · 目標: インドネシアに帰る日<br>
     Tambahkan ke home screen: <b>Share → Add to Home Screen</b> (iPhone) / <b>⋮ → Add to Home screen</b> (Android)
   </div>
 </div>
@@ -213,6 +213,7 @@
     const p = el("pitaStatus"); p.textContent = pita; p.style.color = warna;
 
     renderMilestone(sisaHari, lewat, sisaMs);
+    pasangBadge(sisaHari, lewat);
   }
 
   function renderMilestone(sisaHari, lewat, sisaMs) {
@@ -290,6 +291,15 @@
     if (!l || /^\d{4}-\d{2}-\d{2}$/.test(l)) { simpan(K.lamaran, l); render(); }
   });
 
+  // ---------- badge di ikon app (angka hari) ----------
+  function pasangBadge(sisaHari, lewat) {
+    try {
+      if (lewat) { if (navigator.clearAppBadge) navigator.clearAppBadge(); return; }
+      if (navigator.setAppBadge && sisaHari > 0) navigator.setAppBadge(sisaHari);
+      else if (navigator.setAppBadge) navigator.setAppBadge();
+    } catch (e) {}
+  }
+
   // ---------- service worker (offline) ----------
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
@@ -304,7 +314,7 @@
     ? "Pengingat aktif ✓" : "");
   cekNotifSekarang();
 
-  window.__pulang = { render: render, target: target, DEFAULT_TARGET: DEFAULT_TARGET, DAFTAR_CEK: DAFTAR_CEK, MILESTONE: MILESTONE };
+  window.__pulang = { render: render, target: target, DEFAULT_TARGET: DEFAULT_TARGET, DAFTAR_CEK: DAFTAR_CEK, MILESTONE: MILESTONE, pasangBadge: pasangBadge };
 })();
 </script>
 </body>
