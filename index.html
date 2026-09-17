@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#e11d74">
+<title>Pulang ke Indonesia ✈️</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pulang ✈️">
+<style>
+  :root{
+    --pink:#e11d74; --pink-soft:#fbcfe8; --ink:#1f2937; --muted:#64748b;
+    --card:#ffffff; --bg1:#fff1f7; --bg2:#ffe4ef; --ok:#10b981;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;
+    background:linear-gradient(160deg,var(--bg1),var(--bg2) 60%,#ffe9f3);
+    color:var(--ink); min-height:100vh;
+    padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 34px);
+  }
+  .wrap{max-width:460px;margin:0 auto}
+  .kecil{font-size:.78rem;color:var(--muted)}
+  .judul{display:flex;align-items:center;gap:8px;justify-content:center;margin:2px 0 14px}
+  .judul h1{font-size:1.32rem;margin:0;letter-spacing:.2px}
+  /* kartu utama */
+  .hero{
+    background:var(--card);border-radius:22px;padding:22px 18px 20px;text-align:center;
+    box-shadow:0 12px 30px rgba(225,29,116,.16);border:1px solid #ffe0ee;
+  }
+  .label-atas{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink);font-weight:700}
+  .angka{font-size:5.2rem;line-height:1;font-weight:800;margin:6px 0 0;color:var(--pink);
+    font-variant-numeric:tabular-nums}
+  .angka span{font-size:1.15rem;font-weight:700;color:var(--muted);margin-left:6px}
+  .waktu{font-size:1.02rem;margin-top:8px;font-variant-numeric:tabular-nums;color:#334155;font-weight:600}
+  .tanggal{font-size:.86rem;color:var(--muted);margin-top:6px}
+  .bar{height:12px;border-radius:99px;background:#fde3ef;overflow:hidden;margin:16px 0 6px}
+  .bar > i{display:block;height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,#fb7185,#e11d74)}
+  .persen{font-size:.78rem;color:var(--muted);display:flex;justify-content:space-between}
+  .tombol-baris{display:flex;gap:8px;margin-top:16px;justify-content:center;flex-wrap:wrap}
+  button{
+    font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 15px;min-height:44px;
+    background:#f1f5f9;color:#334155;cursor:pointer
+  }
+  button.utama{background:var(--pink);color:#fff}
+  button:active{transform:scale(.98)}
+  /* kartu kecil */
+  .grid{display:grid;gap:10px;margin-top:14px}
+  .kartu{background:var(--card);border-radius:16px;padding:14px 15px;border:1px solid #ffe4f0;
+    box-shadow:0 6px 16px rgba(225,29,116,.07)}
+  .kartu h2{font-size:.95rem;margin:0 0 10px;display:flex;align-items:center;gap:6px}
+  .baris{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;
+    border-bottom:1px dashed #f1d3e2;font-size:.9rem}
+  .baris:last-child{border-bottom:0}
+  .baris b{font-variant-numeric:tabular-nums}
+  .cek{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px dashed #f1d3e2}
+  .cek:last-child{border-bottom:0}
+  .cek input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--pink);flex:0 0 auto}
+  .cek label{font-size:.9rem;line-height:1.4}
+  .cek.selesai label{color:var(--muted);text-decoration:line-through}
+  .milestone{display:flex;justify-content:space-between;font-size:.88rem;padding:6px 0;
+    border-bottom:1px dashed #f1d3e2}
+  .milestone:last-child{border-bottom:0}
+  .lewat{color:var(--ok);font-weight:700}
+  .akan{color:var(--muted)}
+  .kini{color:var(--pink);font-weight:800}
+  .kaki{text-align:center;margin-top:18px;font-size:.74rem;color:var(--muted);line-height:1.6}
+  .pita{display:inline-block;background:#fff;border:1px solid #ffe0ee;border-radius:99px;
+    padding:5px 11px;font-size:.74rem;color:var(--pink);font-weight:700;margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="judul">
+    <h1>Pulang ke Indonesia</h1><span>✈️</span>
+  </div>
+  <div style="text-align:center"><span class="pita" id="pitaStatus">menghitung…</span></div>
+
+  <div class="hero">
+    <div class="label-atas">Sisa hari</div>
+    <div class="angka" id="hari">–</div>
+    <div class="waktu" id="waktu">–</div>
+    <div class="tanggal" id="tanggalTarget">–</div>
+    <div class="bar"><i id="barIsi"></i></div>
+    <div class="persen"><span id="persen">0%</span><span id="keteranganBar">–</span></div>
+    <div class="tombol-baris">
+      <button class="utama" id="btnNotif">🔔 Aktifkan pengingat</button>
+      <button id="btnUbah">📅 Ubah tanggal</button>
+    </div>
+    <div class="kecil" id="infoNotif" style="margin-top:10px"></div>
+  </div>
+
+  <div class="grid">
+    <div class="kartu">
+      <h2>🗓️ Rencana perjalanan</h2>
+      <div class="baris"><span>Berangkat dari Jepang</span><b id="tglBerangkat">5 Jan 2027</b></div>
+      <div class="baris"><span>Ketemu Andra 💕</span><b id="tglKetemu">6 Jan 2027</b></div>
+      <div class="baris"><span>Hari lamaran 🎀</span><b id="tglLamaran">— belum diisi</b></div>
+      <div class="baris"><span>Kembali ke Jepang</span><b id="tglKembali">17 Jan 2027</b></div>
+      <div class="baris"><span>Sisa hari sebelum pulang ke Jepang</span><b id="sisaKembali">–</b></div>
+    </div>
+
+    <div class="kartu">
+      <h2>✅ Persiapan pulang</h2>
+      <div id="daftarCek"></div>
+      <div class="kecil" id="progresCek" style="margin-top:10px"></div>
+    </div>
+
+    <div class="kartu">
+      <h2>🏁 Penanda hari</h2>
+      <div id="daftarMilestone"></div>
+    </div>
+  </div>
+
+  <div class="kaki">
+    Dibuat sama Tzuyu 🌸 · 目標: インドネシアに帰る日<br>
+    Tambahkan ke home screen: <b>Share → Add to Home Screen</b> (iPhone) / <b>⋮ → Add to Home screen</b> (Android)
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  const K = {
+    target: "pulang_target",          // tanggal tiba di Indonesia (YYYY-MM-DD)
+    kembali: "pulang_kembali",
+    lamaran: "pulang_lamaran",
+    cek: "pulang_checklist",
+    mulai: "pulang_mulai"            // tanggal mulai hitung progress
+  };
+  const DEFAULT_TARGET = "2027-01-05";
+  const DEFAULT_KEMBALI = "2027-01-17";
+  const DEFAULT_MULAI = "2026-09-16";
+
+  const DAFTAR_CEK = [
+    "Tiket pesawat (5 Jan & 17 Jan) sudah dibeli",
+    "Ajukan cuti 休暇届 ke atasan",
+    "Cek masa berlaku paspor & 在留カード",
+    "Konfirmasi tanggal lamaran ke kedua keluarga",
+    "Booking restoran / private room",
+    "Beli oleh-oleh khas Hokkaido",
+    "Baju acara + cincin (cek ukuran)",
+    "Simpan fotokopi paspor & 在留カード",
+    "Kasih jadwal penerbangan ke atasan & keluarga"
+  ];
+
+  const MILESTONE = [100, 50, 30, 14, 10, 7, 3, 1];
+
+  const ambil = (k, bawaan) => { try { return localStorage.getItem(k) || bawaan; } catch (e) { return bawaan; } };
+  const simpan = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+
+  const hariIniAwal = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const parseTgl = (s) => { const p = String(s).split("-").map(Number); return new Date(p[0], p[1] - 1, p[2]); };
+  const selisihHari = (a, b) => Math.round((hariIniAwal(b) - hariIniAwal(a)) / 86400000);
+
+  const BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+  const formatTgl = (d) => d.getDate() + " " + BULAN[d.getMonth()] + " " + d.getFullYear();
+
+  const el = (id) => document.getElementById(id);
+
+  function target() { return parseTgl(ambil(K.target, DEFAULT_TARGET)); }
+
+  function render() {
+    const now = new Date();
+    const tg = target();
+    const mulai = parseTgl(ambil(K.mulai, DEFAULT_MULAI));
+    const kembali = parseTgl(ambil(K.kembali, DEFAULT_KEMBALI));
+
+    const sisaMs = tg - now;                              // ms sampai tiba
+    const sisaHari = Math.max(0, Math.ceil(sisaMs / 86400000));
+    const lewat = sisaMs <= 0;
+
+    el("hari").innerHTML = lewat ? '今ここ 🇮🇩' : sisaHari + '<span>hari</span>';
+
+    if (!lewat) {
+      const j = Math.floor(sisaMs / 3600000);
+      const m = Math.floor((sisaMs % 3600000) / 60000);
+      const d = Math.floor((sisaMs % 60000) / 1000);
+      el("waktu").textContent = j + " jam " + m + " menit " + d + " detik";
+    } else {
+      el("waktu").textContent = "Selamat datang di Indonesia 🎉";
+    }
+
+    el("tanggalTarget").textContent = "tiba " + formatTgl(tg) + " · 日本からインドネシアへ";
+    el("tglBerangkat").textContent = formatTgl(tg);
+    el("tglKetemu").textContent = formatTgl(new Date(tg.getFullYear(), tg.getMonth(), tg.getDate() + 1));
+    el("tglKembali").textContent = formatTgl(kembali);
+
+    const lamaran = ambil(K.lamaran, "");
+    el("tglLamaran").textContent = lamaran ? formatTgl(parseTgl(lamaran)) : "— belum diisi";
+
+    const sisaKembali = selisihHari(now, kembali);
+    el("sisaKembali").textContent = sisaKembali > 0 ? sisaKembali + " hari" : "sudah lewat";
+
+    // progress
+    const total = Math.max(1, tg - mulai);
+    const jalan = Math.min(total, Math.max(0, now - mulai));
+    const persen = Math.round((jalan / total) * 100);
+    el("barIsi").style.width = persen + "%";
+    el("persen").textContent = persen + "%";
+    el("keteranganBar").textContent = selisihHari(mulai, now) + " hari sejak mulai hitung";
+
+    // status pita
+    let pita, warna;
+    if (lewat) { pita = "Sudah sampai Indonesia 🇮🇩"; warna = "#10b981"; }
+    else if (sisaHari <= 3) { pita = "Tinggal " + sisaHari + " hari!! siap-siap 🧳"; warna = "#e11d74"; }
+    else if (sisaHari <= 14) { pita = "H-2 minggu, cek checklist ya"; warna = "#e11d74"; }
+    else { pita = "masih " + sisaHari + " hari lagi"; warna = "#e11d74"; }
+    const p = el("pitaStatus"); p.textContent = pita; p.style.color = warna;
+
+    renderMilestone(sisaHari, lewat, sisaMs);
+  }
+
+  function renderMilestone(sisaHari, lewat, sisaMs) {
+    const box = el("daftarMilestone");
+    let html = "";
+    MILESTONE.forEach(function (m) {
+      let kelas = "akan", tanda = "";
+      if (lewat || sisaHari < m) { kelas = "lewat"; tanda = " ✓"; }
+      else if (sisaHari === m) { kelas = "kini"; tanda = " ← hari ini!"; }
+      html += '<div class="milestone"><span>H-' + m + '</span><span class="' + kelas + '">' +
+        (lewat || sisaHari < m ? "sudah lewat" : sisaHari === m ? "HARI INI 🎉" : m - sisaHari + " hari lagi") +
+        tanda + "</span></div>";
+    });
+    if (sisaMs <= 0) html = '<div class="milestone"><span>🎉</span><span class="lewat">Kamu sudah di Indonesia</span></div>' + html;
+    box.innerHTML = html;
+  }
+
+  function renderCek() {
+    let isi = {};
+    try { isi = JSON.parse(ambil(K.cek, "{}")) || {}; } catch (e) { isi = {}; }
+    const box = el("daftarCek");
+    let html = "";
+    DAFTAR_CEK.forEach(function (t, i) {
+      const on = !!isi[i];
+      html += '<div class="cek ' + (on ? "selesai" : "") + '">' +
+        '<input type="checkbox" id="cek' + i + '" data-i="' + i + '"' + (on ? " checked" : "") + ">" +
+        '<label for="cek' + i + '">' + t + "</label></div>";
+    });
+    box.innerHTML = html;
+    const jml = DAFTAR_CEK.filter(function (t, i) { return isi[i]; }).length;
+    el("progresCek").textContent = jml + " dari " + DAFTAR_CEK.length + " selesai" +
+      (jml === DAFTAR_CEK.length ? " — mantap, siap pulang! 🎉" : "");
+    box.querySelectorAll("input[type=checkbox]").forEach(function (c) {
+      c.addEventListener("change", function () {
+        let data = {};
+        try { data = JSON.parse(ambil(K.cek, "{}")) || {}; } catch (e) { data = {}; }
+        data[c.dataset.i] = c.checked;
+        simpan(K.cek, JSON.stringify(data));
+        renderCek();
+      });
+    });
+  }
+
+  // ---------- notifikasi ----------
+  function infoNotif(teks) { el("infoNotif").textContent = teks || ""; }
+
+  function cekNotifSekarang() {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    const sisa = Math.max(0, Math.ceil((target() - new Date()) / 86400000));
+    const kunci = "pulang_notif_terakhir";
+    const tgl = new Date().toISOString().slice(0, 10);
+    if (ambil(kunci, "") === tgl) return;
+    let pesan = "Sisa " + sisa + " hari lagi sampai Indonesia ✈️";
+    if (MILESTONE.indexOf(sisa) !== -1) pesan = "HARI INI H-" + sisa + "! " + pesan;
+    try {
+      new Notification("Pulang ke Indonesia 🇮🇩", { body: pesan, icon: "icon-192.png", badge: "icon-192.png" });
+      simpan(kunci, tgl);
+    } catch (e) {}
+  }
+
+  el("btnNotif").addEventListener("click", function () {
+    if (!("Notification" in window)) { infoNotif("HP ini nggak dukung notifikasi web 😢"); return; }
+    Notification.requestPermission().then(function (p) {
+      if (p === "granted") infoNotif("Pengingat aktif ✓ Tzuyu cek sisa hari tiap kamu buka app ini.");
+      else infoNotif("Izin notifikasi ditolak — bisa diaktifkan di Setelan browser.");
+      cekNotifSekarang();
+    }).catch(function () { infoNotif("Gagal minta izin notifikasi 😢"); });
+  });
+
+  el("btnUbah").addEventListener("click", function () {
+    const t = prompt("Tanggal tiba di Indonesia (YYYY-MM-DD):", ambil(K.target, DEFAULT_TARGET));
+    if (t && /^\d{4}-\d{2}-\d{2}$/.test(t)) { simpan(K.target, t); render(); }
+    const l = prompt("Tanggal lamaran (YYYY-MM-DD, boleh dikosongkan):", ambil(K.lamaran, ""));
+    if (l === null) return;
+    if (!l || /^\d{4}-\d{2}-\d{2}$/.test(l)) { simpan(K.lamaran, l); render(); }
+  });
+
+  // ---------- service worker (offline) ----------
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+
+  render();
+  renderCek();
+  setInterval(render, 1000);
+  infoNotif(("Notification" in window) && Notification.permission === "granted"
+    ? "Pengingat aktif ✓" : "");
+  cekNotifSekarang();
+
+  window.__pulang = { render: render, target: target, DEFAULT_TARGET: DEFAULT_TARGET, DAFTAR_CEK: DAFTAR_CEK, MILESTONE: MILESTONE };
+})();
+</script>
+</body>
+</html>
